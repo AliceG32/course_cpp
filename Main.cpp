@@ -5,6 +5,7 @@
 #include <vector>
 #include <algorithm>
 #include <limits>
+#include <cassert>
 
 struct Rectangle {
     double upperLeftX;
@@ -107,6 +108,8 @@ Rectangle boundingBox(const std::vector<Rectangle> &rectangles) {
 
 int main() {
 
+    double epsilon(1e-6);
+
     Rectangle rect1(0, 0, 5, 5);
     Rectangle rect2(2, 2, 7, 7);
     Rectangle rect3(10, 10, 15, 15);
@@ -116,11 +119,19 @@ int main() {
     std::vector<Rectangle> rect123 = {rect1, rect2, rect3};
     std::vector<Rectangle> rect1234 = {rect1, rect2, rect3, rect4};
 
-    std::cout << intersectionArea(rect12) << std::endl;
-    std::cout << intersectionArea(rect123) << std::endl;
-    std::cout << intersectionArea(rect1234) << std::endl;
+    //std::cout << intersectionArea(rect12) << std::endl;
+    assert(std::abs(intersectionArea(rect12) - 9.0) < epsilon);
+    //std::cout << intersectionArea(rect123) << std::endl;
+    assert(std::abs(intersectionArea(rect123) - 0.0) < epsilon);
+    //std::cout << intersectionArea(rect1234) << std::endl;
+    assert(std::abs(intersectionArea(rect1234) - 0.0) < epsilon);
     Rectangle bbox = boundingBox(rect12);
-    std::cout << "Минимальный ограничивающий прямоугольник: ";
-    bbox.print();
+    assert(std::abs(bbox.upperLeftX - 0.0) < epsilon);
+    assert(std::abs(bbox.upperLeftY - 0.0) < epsilon);
+    assert(std::abs(bbox.downRightX - 7.0) < epsilon);
+    assert(std::abs(bbox.downRightY - 7.0) < epsilon);
+    assert(std::abs(bbox.area() - 49.0) < epsilon);
+    //std::cout << "Минимальный ограничивающий прямоугольник: ";
+    //bbox.print();
 }
 

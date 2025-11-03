@@ -58,11 +58,11 @@ private:
 public:
     explicit Circle(double r) : radius(r) {}
 
-    double perimeter() const final {
+    [[nodiscard]] double perimeter() const final {
         return 2 * std::numbers::pi * radius;
     }
 
-    [[nodiscard]] double area() const override final {
+    [[nodiscard]] double area() const final {
         return std::numbers::pi * radius * radius;
     }
 };

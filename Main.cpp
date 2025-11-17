@@ -47,9 +47,6 @@ namespace custom_traits {
     template<typename T>
     using remove_const_t = typename remove_const<T>::type;
 
-    using std::remove_extent;
-    using std::remove_extent_t;
-
     template<bool B, typename T, typename F>
     struct conditional {
         using type = T;
@@ -62,22 +59,6 @@ namespace custom_traits {
 
     template<bool B, typename T, typename F>
     using conditional_t = typename conditional<B, T, F>::type;
-
-    template<typename T>
-    struct is_array : false_type {
-    };
-    template<typename T>
-    struct is_array<T[]> : true_type {
-    };
-    template<typename T, std::size_t N>
-    struct is_array<T[N]> : true_type {
-    };
-
-    template<typename T>
-    inline constexpr bool is_array_v = is_array<T>::value;
-
-    using std::is_function;
-    using std::is_function_v;
 
     template<typename T>
     true_type test_is_class(int T::*);
@@ -113,10 +94,10 @@ namespace custom_traits {
         using U = remove_reference_t<T>;
     public:
         using type = conditional_t<
-                is_array_v<U>,
-                remove_extent_t<U> *,
+                std::is_array_v<U>,
+                std::remove_extent_t<U> *,
                 conditional_t<
-                        is_function_v<U>,
+                        std::is_function_v<U>,
                         U *,
                         remove_const_t<U>
                 >

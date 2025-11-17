@@ -47,21 +47,8 @@ namespace custom_traits {
     template<typename T>
     using remove_const_t = typename remove_const<T>::type;
 
-    template<typename T>
-    struct remove_extent {
-        using type = T;
-    };
-    template<typename T>
-    struct remove_extent<T[]> {
-        using type = T;
-    };
-    template<typename T, std::size_t N>
-    struct remove_extent<T[N]> {
-        using type = T;
-    };
-
-    template<typename T>
-    using remove_extent_t = typename remove_extent<T>::type;
+    using std::remove_extent;
+    using std::remove_extent_t;
 
     template<bool B, typename T, typename F>
     struct conditional {
@@ -89,49 +76,8 @@ namespace custom_traits {
     template<typename T>
     inline constexpr bool is_array_v = is_array<T>::value;
 
-    template<typename T>
-    struct is_function : false_type {
-    };
-
-    template<typename Ret>
-    struct is_function<Ret()> : true_type {
-    };
-    template<typename Ret>
-    struct is_function<Ret(...)> : true_type {
-    };
-    template<typename Ret, typename Arg1>
-    struct is_function<Ret(Arg1)> : true_type {
-    };
-    template<typename Ret, typename Arg1>
-    struct is_function<Ret(Arg1, ...)> : true_type {
-    };
-    template<typename Ret, typename Arg1, typename Arg2>
-    struct is_function<Ret(Arg1, Arg2)> : true_type {
-    };
-    template<typename Ret, typename Arg1, typename Arg2>
-    struct is_function<Ret(Arg1, Arg2, ...)> : true_type {
-    };
-
-
-    template<typename Ret>
-    struct is_function<Ret() const> : true_type {
-    };
-    template<typename Ret>
-    struct is_function<Ret() volatile> : true_type {
-    };
-    template<typename Ret>
-    struct is_function<Ret() const volatile> : true_type {
-    };
-    template<typename Ret>
-    struct is_function<Ret() &> : true_type {
-    };
-    template<typename Ret>
-    struct is_function<Ret() &&> : true_type {
-    };
-
-    template<typename T>
-    inline constexpr bool is_function_v = is_function<T>::value;
-
+    using std::is_function;
+    using std::is_function_v;
 
     template<typename T>
     true_type test_is_class(int T::*);
@@ -195,6 +141,7 @@ static_assert(!custom_traits::is_class_v<int>, "int should not be a class");
 static_assert(std::is_same_v<custom_traits::add_const_t<int>, const int>, "add_const_t<int> should be const int");
 static_assert(std::is_same_v<custom_traits::add_const_t<const int>, const int>,
               "add_const_t<const int> should be const int");
+
 static_assert(std::is_same_v<custom_traits::remove_const_t<const int>, int>, "remove_const_t<const int> should be int");
 static_assert(std::is_same_v<custom_traits::remove_const_t<int>, int>, "remove_const_t<int> should be int");
 

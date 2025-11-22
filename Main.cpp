@@ -2,55 +2,55 @@
 // Created by alice on 22.11.2025.
 //
 #include <iostream>
-#include <string>
+
+////////////////////////////////////////////////////
 
 class Entity {
 public:
     virtual ~Entity() = default;
 
-    virtual void operation() const = 0;
-
-    [[nodiscard]] virtual std::string getName() const = 0;
+    virtual void test() const = 0;
 };
 
-class BaseEntity : public Entity {
+////////////////////////////////////////////////////
+
+class Client : public Entity {
 public:
-    void operation() const override {
-        std::cout << "BaseEntity operation" << std::endl;
-    }
-
-    [[nodiscard]] std::string getName() const override {
-        return "BaseEntity";
+    void test() const override {
+        std::cout << "Client::test\n";
     }
 };
+
+////////////////////////////////////////////////////
+
+class Server : public Entity {
+public:
+    void test() const override {
+        std::cout << "Server::test\n";
+    }
+};
+
+////////////////////////////////////////////////////
 
 template<typename T>
 class Decorator : public T {
-
 public:
-
-    void operation() const override {
-
-        std::cout << "Decorator: before operation" << std::endl;
-        T::operation();
-        std::cout << "Decorator: after operation" << std::endl;
-    }
-
-    [[nodiscard]] std::string getName() const override {
-        return "Decorated " + T::getName();
+    [[maybe_unused]] void test() const override {
+        std::cout << "Decorator::test : ";
+        T::test();
     }
 };
 
+////////////////////////////////////////////////////
+
 int main() {
-    std::cout << "Entity" << std::endl;
-    BaseEntity basic;
-    basic.operation();
-    std::cout << "Name: " << basic.getName() << std::endl;
 
-    std::cout << "\nDecorated Entity" << std::endl;
-    Decorator<BaseEntity> decorated;
-    decorated.operation();
-    std::cout << "Name: " << decorated.getName() << std::endl;
+    Entity *entity_1 = new Client;
+    Entity *entity_2 = new Decorator<Client>;
 
-    return 0;
+    entity_1->test();
+    entity_2->test();
+
+    delete entity_2;
+    delete entity_1;
 }

@@ -2,52 +2,45 @@
 // Created by alice on 22.11.2025.
 //
 #include <iostream>
-#include <string>
+
+/////////////////////////////////////////////////////////
+
+class Slow {
+public :
+
+    static void test() {
+        std::cout << "Slow::test\n";
+    }
+};
+
+/////////////////////////////////////////////////////////
+
+class Fast {
+public :
+
+    static void test() {
+        std::cout << "Fast::test\n";
+    }
+};
+
+/////////////////////////////////////////////////////////
 
 template<typename T>
 class Entity : public T {
+
 public:
-
-    void performOperation() const {
-        T::execute();
-    }
-
-    [[nodiscard]] std::string getDescription() const {
-        return "Entity with " + T::getName();
+    void test() const {
+        T::test();
     }
 };
 
-class BaseStrategy {
-public:
-    static void execute() {
-        std::cout << "Base strategy execution" << std::endl;
-    }
-
-    static std::string getName() {
-        return "BaseStrategy";
-    }
-};
-
-class BaseStrategy2 {
-public:
-    static void execute() {
-        std::cout << "Base strategy2 execution" << std::endl;
-    }
-
-    static std::string getName() {
-        return "BaseStrategy2";
-    }
-};
+/////////////////////////////////////////////////////////
 
 int main() {
-    Entity<BaseStrategy> entity;
-    Entity<BaseStrategy2> entity2;
+    Entity<Slow> entity_slow;
+    Entity<Fast> entity_fast;
 
-    entity.performOperation();
-    std::cout << entity.getDescription() << std::endl;
+    entity_slow.test();
+    entity_fast.test();
 
-    entity2.performOperation();
-    std::cout << entity2.getDescription() << std::endl;
-
-    return 0;
 }

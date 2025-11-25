@@ -26,8 +26,7 @@ public :
 /////////////////////////////////////////////////////////
 
 template<typename T>
-class Entity : public T {
-
+class Entity : private T {
 public:
     void test() const {
         T::test();

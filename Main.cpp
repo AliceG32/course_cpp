@@ -3,11 +3,18 @@
 //
 #include <vector>
 #include <cassert>
+#include <type_traits>
+
+template<typename Container, typename T>
+void check(Container &container, T &&arg) {
+    if constexpr (std::is_same_v<std::decay_t<T>, int>) {
+        container.push_back(std::forward<T>(arg));
+    }
+}
 
 template<typename Container, typename... Args>
-void push_back_ints(Container &container, Args... args) {
-
-    ((container.push_back(args)), ...);
+void push_back_ints(Container &container, Args &&... args) {
+    ((check(container, std::forward<Args>(args))), ...);
 }
 
 int main() {
@@ -26,6 +33,15 @@ int main() {
     std::vector<int> vec3;
     push_back_ints(vec3);
     assert(vec3.empty());
+
+    std::vector<int> vec4;
+    push_back_ints(vec4, 10, 3.14, "hello", 20, 'a', 30);
+    assert(vec4.size() == 3);
+    assert(vec4[0] == 10 && vec4[1] == 20 && vec4[2] == 30);
+
+    std::vector<int> vec5;
+    push_back_ints(vec5, 3.14, "test", 'c');
+    assert(vec5.empty());
 
     return 0;
 }

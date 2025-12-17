@@ -22,7 +22,7 @@ public:
 template<typename T, typename... Ts>
 class Tuple<T, Ts...> {
 public:
-    explicit Tuple(T &&x, Ts &&... ys)
+    explicit constexpr Tuple(T &&x, Ts &&... ys)
             : m_head(std::forward<T>(x)),
               m_tail(std::forward<Ts>(ys)...) {}
 
@@ -31,7 +31,7 @@ public:
     }
 
     template<std::size_t I>
-    [[nodiscard]] auto get() const {
+    [[nodiscard]] constexpr auto get() const {
         if constexpr (I > 0) {
             return m_tail.template get<I - 1>();
         } else {
@@ -62,6 +62,15 @@ int main() {
     Tuple<> empty_tuple;
     static_assert(Tuple<>::size() == 0);
     assert(empty_tuple.size() == 0);
+
+    constexpr Tuple<int, double> tuple4(10, 3.14);
+    static_assert(tuple4.get<0>() == 10);
+    static_assert(tuple4.get<1>() == 3.14);
+
+    constexpr Tuple<int, Tuple<double, char>> tuple5(5, Tuple<double, char>(2.5, 'x'));
+    static_assert(tuple5.size() == 2);
+    static_assert(tuple5.get<0>() == 5);
+    static_assert(tuple5.get<1>().size() == 2);
 
     return 0;
 }
